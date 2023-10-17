@@ -73,7 +73,7 @@ function App() {
     const publicKey = newPair.publicKey.toBase58();
     const privateKey = new Uint8Array(newPair.secretKey);
     setNewAccountSecretKey(privateKey);
-    const connection = new Connection(clusterApiUrl("testnet"), "confirmed");
+    const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
     setMessage("Creating wallet...");
     await airDropSol(newPair.secretKey, newPair.publicKey);
   };
@@ -93,11 +93,11 @@ function App() {
 
   const airDropSol = async (privateKey: Uint8Array, publicKey: PublicKey) => {
     try {
-      const connection = new Connection(clusterApiUrl("testnet"), "confirmed");
+      const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
       setMessage("Requesting airdrop...");
       const fromAirDropSignature = await connection.requestAirdrop(
         publicKey,
-        4 * LAMPORTS_PER_SOL
+        2 * LAMPORTS_PER_SOL
       );
       await connection.confirmTransaction(fromAirDropSignature, "confirmed");
       setMessage("Airdrop successful.");
@@ -117,7 +117,7 @@ function App() {
       setMessage("No new account secret key available.");
       return;
     }
-    const connection = new Connection(clusterApiUrl("testnet"), "confirmed");
+    const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
     const from = Keypair.fromSecretKey(newAccountSecretKey);
     const to = walletKey;
 
@@ -141,7 +141,7 @@ function App() {
 
   const getWalletBalance = async () => {
     try {
-      const connection = new Connection(clusterApiUrl("testnet"), "confirmed");
+      const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 
       if (newAccountSecretKey) {
         const myWallet = Keypair.fromSecretKey(newAccountSecretKey);
@@ -163,7 +163,7 @@ function App() {
     <button className="custom-button" onClick={createWallet}>Create a New Solana Account</button>
     <button className="custom-button" onClick={transferToWallet}>Transfer SOL to New Account</button>
     <button className="custom-button" onClick={connectWallet}>Connect Wallet</button>
-    <button className="custom-button" onClick={getWalletBalance}>Get Wallet Balance</button>
+    <button className="custom-button" onClick={getWalletBalance}>New Account Balance</button>
     {provider && walletKey && <p>Connected account</p>}
     {message && <p>{message}</p>}
   </header>
